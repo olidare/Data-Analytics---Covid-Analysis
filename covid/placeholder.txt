@@ -1,0 +1,24 @@
+Covid Project
+import pandas as pd
+from datetime import datetime
+
+df = pd.read_csv('owid-covid-data.csv', index_col=0)
+df['date'] = pd.to_datetime(df['date'], format='%d/%m/%Y', errors='coerce')
+
+int_list = ['population', 'total_cases','total_deaths', 'new_deaths', 'new_cases','icu_patients','total_tests', 'new_tests',
+           'people_vaccinated', 'people_fully_vaccinated', 'total_boosters', 'new_vaccinations', 'median_age' ]
+
+df = df.astype({col: 'Int64' for col in int_list})
+
+#to verify
+for x in df:
+    print(x + " " + str(df[x].dtypes))
+
+covid_vacc_df = df.copy(deep=True)
+covid_vacc_df.drop(covid_vacc_df.columns[5:25], axis=1, inplace=True)
+df.drop(columns=df.columns[-25:], axis=1, inplace=True)
+
+covid_vacc_df.to_csv('covid_vaccinations.csv')
+df.to_csv('covid_deaths.csv')
+
+Then create sql tables with dtype BIGINT for the changed values above.
